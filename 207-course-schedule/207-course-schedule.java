@@ -1,23 +1,35 @@
 class Solution {
-    public boolean isCyclic(List<List<Integer>> prerequsite,int curr,int[] visited){
-        if(visited[curr]==1) return true;
-        visited[curr]=1;
-        for(int i:prerequsite.get(curr)){
-            if(visited[i]!=2)
-                if(isCyclic(prerequsite,i,visited)) return true;
-        }
-        visited[curr]=2;
-        return false;
-    }
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int plen = prerequisites.length;
-        List<List<Integer>> prerequsite = new ArrayList<>();
-        for(int i=0;i<numCourses;i++) prerequsite.add(new ArrayList<>());
-		for(int i=0;i<plen;i++) prerequsite.get(prerequisites[i][0]).add(prerequisites[i][1]);
-        int[] visited = new int[numCourses];
-        for(int i=0;i<numCourses;i++){
-            if(isCyclic(prerequsite,i,visited)) return false;
-        }
-        return true;
+    int[][] adj = new int[numCourses][numCourses];
+    int[] indegree = new int[numCourses];
+    int n = prerequisites.length;
+    for(int i=0;i<n;i++){
+        int u = prerequisites[i][0];
+        int v = prerequisites[i][1];
+        adj[v][u] = 1;
+        indegree[u] ++;
     }
+    Queue<Integer> queue = new LinkedList<Integer>();
+
+    for(int i=0;i<numCourses;i++){
+        if(indegree[i] == 0){
+            queue.add(i);
+        }
+    }
+    int count = 0;
+    while(!queue.isEmpty()){
+        int cur = queue.poll();
+        count += 1;
+        for(int i = 0; i < numCourses;i++){
+            if(adj[cur][i] == 1){
+                indegree[i]--;
+                if(indegree[i] == 0){
+                    queue.add(i);
+                }
+            }
+        }
+    }
+    return count == numCourses;
+    
+}
 }
