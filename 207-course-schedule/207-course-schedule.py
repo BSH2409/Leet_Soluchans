@@ -3,31 +3,23 @@ class Solution(object):
         if not prerequisites:
             return True
         
-        def DFS(node):
-            # Cycle detected.
+        def dfs(node):
             if visited[node] == 1:
                 return False
-            
-            # Visit this node, explore neighbors.
             visited[node] = 1
-            for nbr in G[node]:
-                if visited[nbr] != 2 and not DFS(nbr):
+            for i in adj[node]:
+                if visited[i] != 2 and not dfs(i):
                     return False
-            
-            # Done visiting node.
             visited[node] = 2
             return True
-        
-        # Build the graph.
-        G = collections.defaultdict(list)
-        for postreq, course in prerequisites:
-            G[course].append(postreq)
-            G[postreq]  # Make sure nodes are made for courses with no postreqs.
-        
+        adj = collections.defaultdict(list)
+        for a,b in prerequisites:
+            adj[b].append(a)
+            adj[a] 
         visited = [0] * numCourses
-        for node in G:
+        for node in adj:
             if not visited[node]:
-                if not DFS(node):
+                if not dfs(node):
                     return False
         return True
         
