@@ -1,52 +1,38 @@
 class Solution {
 public:
-    int max_depth;
-    int far_node;
-    void dfs(int s, vector<bool> &visited, vector< vector<int> > &adj, int depth, vector<int> &path) {
-        visited[s] = true;
-        if(max_depth < depth) {
-            max_depth = depth;
-            far_node = s;
-        }
-        for(auto i : adj[s]) {
-            if(!visited[i]) {
-                path[i] = s;
-                dfs(i, visited, adj, depth+1, path);
-            }
-        }
-    }
-    
     vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
-        vector<vector<int>> adj(n);
-        for(int i = 0; i < edges.size(); i++) {
-            adj[edges[i][0]].push_back(edges[i][1]);
-            adj[edges[i][1]].push_back(edges[i][0]);
+        if(n==1)
+            return {0};
+        vector<vector<int>> graph(n);
+        vector<int> degree(n);
+        for(auto &e:edges){
+            int u=e[0],v=e[1];
+            graph[u].push_back(v);graph[v].push_back(u);
+            degree[u]++;degree[v]++;
         }
-        far_node = 0;
-        max_depth = 0;
-        vector<int> path(n, -1);
-        vector<bool> visited(n);
-        dfs(0, visited, adj, 0, path);
-        max_depth = -1;
-        visited=vector(n,false);
-        path=vector(n,-1);
-        dfs(far_node, visited, adj, 0, path);
-        int u = far_node;
-        int depth = 0;
-        vector<int> res;
-        while(u != -1) {
-            if(max_depth % 2) {
-                if(depth == (max_depth / 2) || depth == ((max_depth + 1) / 2)) {
-                    res.push_back(u);
-                }
-            } else {
-                if(depth == (max_depth / 2)) {
-                    res.push_back(u);
+        queue<int> q;
+        for(int i=0;i<n;i++){
+            if(degree[i]==1)
+                q.push(i);
+        }
+        while(n>2){
+            n-=q.size();
+            int s=q.size();
+            while(s--){
+                int u=q.front();
+                q.pop();
+                for(int v:graph[u]){
+                    degree[v]--;
+                    if(degree[v]==1)
+                        q.push(v);
                 }
             }
-            depth++;
-            u = path[u];
         }
-        return res;
+        vector<int> ans;
+        while(q.size()){
+            ans.push_back(q.front());
+            q.pop();
+        }
+        return ans;
     }
 };
