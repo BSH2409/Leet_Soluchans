@@ -1,25 +1,25 @@
 class Solution(object):
     def canFinish(self, numCourses, prerequisites):
-        if not prerequisites:
-            return True
+        indegree, adj  = [0]*numCourses, defaultdict(list)
         
-        def dfs(node):
-            if visited[node] == 1:
-                return False
-            visited[node] = 1
-            for i in adj[node]:
-                if visited[i] != 2 and not dfs(i):
-                    return False
-            visited[node] = 2
-            return True
-        adj = collections.defaultdict(list)
         for a,b in prerequisites:
             adj[b].append(a)
-            adj[a] 
-        visited = [0] * numCourses
-        for node in adj:
-            if not visited[node]:
-                if not dfs(node):
-                    return False
-        return True
+            indegree[a] += 1
         
+        queue=[]
+        count=0
+        
+        for i in range(numCourses):
+            if indegree[i]==0:
+                queue.append(i)
+                count+=1
+
+        while queue:
+            cur = queue.pop(0)
+            for i in adj[cur]:
+                indegree[i] -=1
+                if indegree[i] == 0:
+                    queue.append(i)
+                    count += 1
+                    
+        return count == numCourses
