@@ -1,24 +1,27 @@
 class Solution {
     public int evalRPN(String[] a) {
   Stack<Integer> stack = new Stack<Integer>();
-  
+  int num1,num2;
   for (int i = 0; i < a.length; i++) {
     switch (a[i]) {
       case "+":
-        stack.push(stack.pop() + stack.pop());
+        num1=stack.pop(); num2=stack.pop();
+        stack.push(num1+num2);
         break;
           
       case "-":
-        stack.push(-stack.pop() + stack.pop());
+        num1=stack.pop();num2=stack.pop();
+        stack.push(num2-num1);
         break;
           
       case "*":
-        stack.push(stack.pop() * stack.pop());
+        num1=stack.pop();num2=stack.pop();
+        stack.push(num1*num2);
         break;
 
       case "/":
-        int n1 = stack.pop(), n2 = stack.pop();
-        stack.push(n2 / n1);
+        num1 = stack.pop(); num2 = stack.pop();
+        stack.push(num2 / num1);
         break;
           
       default:
