@@ -1,59 +1,39 @@
-class Solution {
-    public List<List<String>> solveNQueens(int n) {
-        List<List<String>> ans = new ArrayList<List<String>>();
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        def in_range(r, c):
+            return 0 <= r < n and 0 <= c < n
         
-        char arr[][] = new char[n][n];
-        for(int i=0;i<n;i++)
-            for(int j=0;j<n;j++)
-                arr[i][j] = '.';
+        def validate(r, c, board):
+            for i in range(c):
+                if board[r][i] == 'Q':
+                    return False
+            
+            for i in range(1, c + 1):
+                if not in_range(r - i, c - i):
+                    break
+                if board[r - i][c - i] == 'Q':
+                    return False
+            
+            for i in range(1, c + 1):
+                if not in_range(r + i, c - i):
+                    break
+                if board[r + i][c - i] == 'Q':
+                    return False
+            return True
         
-        help(ans,arr,0);
-        return ans;
-    }
-    private void help(List<List<String>> ans, char[][] arr, int row)
-    {
-        if(row == arr.length)
-        {
-            ans.add(build(arr));
-            return;
-        }
-        for(int col=0;col<arr.length;col++)
-        {
-            if(validate(arr,row,col))
-            {
-                arr[row][col] = 'Q';
-                help(ans,arr,row+1);
-                arr[row][col] = '.'; 
-            }
-        }
-    }
-    
-    private boolean validate(char[][] arr,int row,int col)
-    {
-        for(int i=0;i<row;i++)
-        {
-            if(arr[i][col] == 'Q')
-                return false;
-        }
-        for(int i=row-1,j=col+1;i>=0 && j<arr.length;i--,j++)
-        {
-            if(arr[i][j] == 'Q')
-                return false;
-        }
+        def help(col, board):
+            if col == n:
+                res.append([''.join(line) for line in board])
+                return
+            
+            for row in range(n):
+                if validate(row, col, board):
+                    board[row][col] = 'Q'
+                    help(col + 1, board)
+                    board[row][col] = '.'
+                    
+        res = []
+        board = [['.' for _ in range(n)] for _ in range(n)]
+        help(0, board)
+        return res
         
-        for(int i=row-1,j=col-1;i>=0 && j>=0;i--,j--)
-        {
-            if(arr[i][j] == 'Q')
-                return false;
-        }
-        return true;
-    }
-    
-    private List<String> build(char arr[][])
-    {
-        List<String> val = new ArrayList<>();
-        for(int i=0;i<arr.length;i++)
-            val.add(new String(arr[i]));
-        return val;
-    }
-}
