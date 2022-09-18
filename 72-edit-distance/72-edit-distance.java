@@ -1,39 +1,32 @@
 class Solution {
-    
     public int minDistance(String word1, String word2) {
-        int[][] dp = new int[word1.length()][word2.length()];
-        for (int i = 0; i < word1.length(); i++) {
-            for (int j = 0; j < word2.length(); j++) {
-                dp[i][j] = -1;
+        if (word1 == null || word2 == null) return -1;
+        if (word1.length() == 0) return word2.length();
+        if (word2.length() == 0) return word1.length();
+        
+        char[] w1 = word1.toCharArray();
+        char[] w2 = word2.toCharArray();
+        
+        int[][] dp = new int[w1.length + 1][w2.length + 1];
+        for (int i = 0; i <= w1.length; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= w2.length; j++) {
+            dp[0][j] = j;
+        }
+        
+        for (int i = 0; i < w1.length; i++) {
+            for (int j = 0; j < w2.length; j++) {
+                if (w1[i] == w2[j]) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = Math.min(Math.min(dp[i][j + 1], dp[i + 1][j]), dp[i][j]) + 1;
+                }
             }
         }
-        return match(word1, word2, 0, 0,dp);
+        
+        return dp[w1.length][w2.length];
     }
     
-    private int match(String s1, String s2, int i, int j, int[][] dp) {
-       
-        if (s1.length() == i) {
-            return s2.length() - j;
-        }
-        if (s2.length() == j) {
-            return s1.length() - i;
-        }
-        if(dp[i][j]!=-1) return dp[i][j];
-        int res;
-        
-        if (s1.charAt(i) == s2.charAt(j)) {
-            res = match(s1, s2, i + 1, j + 1,dp);
-        } else {
-        
-            int insert = match(s1, s2, i, j + 1,dp);
-        
-            int delete = match(s1, s2, i + 1, j,dp);
-        
-            int replace = match(s1, s2, i + 1, j + 1,dp);
-        
-            res = Math.min(Math.min(insert, delete), replace) + 1;
-        }
-        
-        return dp[i][j]=res;
-    }
-}  
+
+}
