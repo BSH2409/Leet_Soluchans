@@ -1,6 +1,6 @@
 class Solution(object):
     def removeInvalidParentheses(self, s):
-        seen = set() # set of states seen (strings)
+        visited = set() 
         ans = []
 
         q = deque([s])
@@ -11,10 +11,10 @@ class Solution(object):
             for i in range(n):
                 node = q.pop()
 
-                if node in seen:
+                if node in visited:
                     continue
 
-                seen.add(node)
+                visited.add(node)
 
                 if valid(node):
                     ans.append(node)
@@ -23,9 +23,8 @@ class Solution(object):
 
                 for j in range(len(node)):
                     if node[j] == "(" or node[j] == ")":
-                        prefix, suffix = node[:j], node[j+1:]
-                        newnode = prefix+suffix
-                        if newnode not in seen:
+                        newnode = node[:j] + node[j+1:]
+                        if newnode not in visited:
                             q.appendleft(newnode)
             if found:
                 break
