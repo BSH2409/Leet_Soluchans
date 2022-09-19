@@ -1,41 +1,46 @@
-class Solution:
-    def removeInvalidParentheses(self,s):
+class Solution(object):
+    def removeInvalidParentheses(self, s):
+        seen = set() # set of states seen (strings)
+        ans = []
 
-        del_left=0
-        del_right=0
-        
-        for i in s:
-            if i=="(":
-                del_left+=1
-            elif i==")":
-                if del_left>0:
-                    del_left-=1
-                else:
-                    del_right+=1
-        
-        ans=set()
-        
-        def dfs(index,left,right,del_left,del_right,seq):
-            if index==len(s):
-                if left==right and del_left==0 and del_right==0:
-                    ans.add(seq)
-                return 
+        q = deque([s])
+
+        while q:
+            n = len(q)
+            found = False
+            for i in range(n):
+                node = q.pop()
+
+                if node in seen:
+                    continue
+
+                seen.add(node)
+
+                if valid(node):
+                    ans.append(node)
+                    found = True
+                    continue
+
+                for j in range(len(node)):
+                    if node[j] == "(" or node[j] == ")":
+                        prefix, suffix = node[:j], node[j+1:]
+                        newnode = prefix+suffix
+                        if newnode not in seen:
+                            q.appendleft(newnode)
+            if found:
+                break
+        return ans
             
-            if s[index]=='(':
-                if del_left>0:
-                    dfs(index+1,left,right,del_left-1,del_right,seq)
-                    
-                dfs(index+1,left+1,right,del_left,del_right,seq+"(")
-                
-            elif s[index]==')':
-                if del_right>0:
-                    dfs(index+1,left,right,del_left,del_right-1,seq)
-                if  right<left:  
-                    dfs(index+1,left,right+1,del_left,del_right,seq+")")
+def valid(s):
+    open,close = 0,0
+    
+    for i in range(len(s)):
+        if s[i] == "(":
+            open+=1
+        elif s[i] == ")":
+            if open > 0:
+                open-=1
             else:
-                dfs(index+1,left,right,del_left,del_right,seq+s[index])
-                
-                    
-                
-        dfs(0,0,0,del_left,del_right,"")
-        return list(ans)
+                close+=1
+    return open == 0 and close == 0
+        
