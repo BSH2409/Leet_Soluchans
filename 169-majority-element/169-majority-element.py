@@ -1,7 +1,11 @@
 class Solution(object):
     def majorityElement(self, nums):
-        hash = {}
-        for element in nums:
-            hash[element] = hash.get(element, 0) + 1
-            if hash[element] > len(nums)//2:
-                return element
+        count,prev=0,0
+        for element in nums :
+            if count==0:
+                prev=element
+            if element==prev :
+                count+=1
+            else :
+                count-=1
+        return prev
