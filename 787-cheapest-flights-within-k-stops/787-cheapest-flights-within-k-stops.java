@@ -14,18 +14,18 @@ class Solution {
     
         while(!queue.isEmpty()) {
             int[] curr  = queue.poll();
-            int currSrc = curr[0];
-            int currWt  = curr[1];
-            int currK   = curr[2];
+            int cur_pos = curr[0];
+            int cur_cost  = curr[1];
+            int cur_steps   = curr[2];
             
-            if(currSrc == dst) return currWt;
+            if(cur_pos == dst) return cur_cost;
             
-            if(currK > k || (visited[currSrc]!= -1 && visited[currSrc] < currK)) continue;
+            if(cur_steps > k || (visited[cur_pos]!= -1 && visited[cur_pos] < cur_steps)) continue;
             
-            visited[currSrc] = currK;
+            visited[cur_pos] = cur_steps;
             
-            for(int[] e : adj[currSrc]) {
-                queue.offer(new int[]{e[0], currWt + e[1], currK + 1});
+            for(int[] e : adj[cur_pos]) {
+                queue.offer(new int[]{e[0], cur_cost + e[1], cur_steps + 1});
             }
         }
         
