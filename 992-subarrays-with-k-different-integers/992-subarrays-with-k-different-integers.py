@@ -12,7 +12,7 @@ class Solution:
                 hash_set.add(nums[window_end])
                 hash_map[nums[window_end]] += 1
 
-                while len(hash_set) > k:
+                while len(hash_set) == k+1:
                     hash_map[nums[window_start]] -= 1
                     if hash_map[nums[window_start]] == 0:
                         hash_set.remove(nums[window_start])
