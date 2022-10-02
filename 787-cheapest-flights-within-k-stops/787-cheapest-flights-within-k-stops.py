@@ -1,26 +1,21 @@
-class Solution:
-    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        if not flights or not flights[0]:
-            return -1
-        
-        visited =[-1]*n
-        adj = collections.defaultdict(list)
-        for s, d, c in flights:
-            adj[s].append([d, c])
-        
-        heap = [(0,src,0)] 
 
-        while heap:
-            cur_cost, cur_pos, cur_steps = heapq.heappop(heap)
-           
-            if cur_pos == dst:
-                return cur_cost
-            if cur_steps > k or (visited[cur_pos]!=-1 and visited[cur_pos]< cur_steps): 
-                continue
-            
-            visited[cur_pos]=cur_steps
-            
-            for nextDst, nextCost in adj[cur_pos]: 
-                heapq.heappush(heap, (cur_cost + nextCost, nextDst, cur_steps + 1))
+class Solution:
+
+    
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+        prev_iter = [float('inf')] * n
+        prev_iter[src] = 0
         
-        return -1
+        for i in range(k + 1):
+
+            cur_iter = list(prev_iter)
+            for source, dest, cost in flights:
+                current_cheapest = cur_iter[dest]
+                new_price = prev_iter[source] + cost
+                
+                if new_price < current_cheapest:
+                    cur_iter[dest] = new_price
+
+            prev_iter = cur_iter
+        
+        return prev_iter[dst] if prev_iter[dst] != float('inf') else -1
