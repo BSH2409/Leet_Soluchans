@@ -1,19 +1,15 @@
-public class Solution {
-public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-Set visited = new HashSet<>();
-
-    while ( headA != null ) {
-        visited.add(headA);
-        headA = headA.next;
-    }
-    
-    while ( headB != null ) {
-        if ( visited.contains(headB) ) {
-            return headB;
-        } else {
-            headB = headB.next;
-        }
-    }
-    return null;
-}
-}
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        ptra, ptrb = headA, headB
+        while (ptra != ptrb):
+            if ptra:
+                ptra= ptra.next
+            else :
+                ptra= headB
+                
+            if ptrb:
+                ptrb= ptrb.next
+            else :
+                ptrb= headA
+                
+        return ptra
