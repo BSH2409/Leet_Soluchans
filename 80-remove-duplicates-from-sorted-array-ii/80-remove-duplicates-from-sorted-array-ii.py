@@ -1,6 +1,6 @@
 class Solution(object):
     def removeDuplicates(self, nums):
-        map = dict()
+        
         cur_index = 1
         cur_count = 1
         
