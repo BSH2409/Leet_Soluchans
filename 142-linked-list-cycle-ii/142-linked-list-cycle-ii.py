@@ -1,8 +1,13 @@
-class Solution:
-    def detectCycle(self, head: ListNode) -> ListNode:
-        hash_set = set()
-        while head:
-            if head in hash_set:
-                return head
-            hash_set.add(head)
-            head = head.next
+class Solution(object):
+    def detectCycle(self, head):
+        
+        slow = fast = head
+        while fast and fast.next:
+            slow, fast = slow.next, fast.next.next
+            if slow == fast:
+                while head!=slow:
+                    head=head.next
+                    slow=slow.next
+                return slow
+        
+        return None
